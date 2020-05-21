@@ -3,29 +3,43 @@ import "CoreLibs/graphics"
 
 local gfx <const> = playdate.graphics
 
-class("Nick").extends(gfx.sprite)
-
-local frameTable <const> = {
-    gfx.image.new("images/nick1"),
-    gfx.image.new("images/nick2"),
-    gfx.image.new("images/nick3"),
-    gfx.image.new("images/nick4"),
-}
-
 local lowThreshold <const> = 5
 local midThreshold <const> = 15
 local bigThreshold <const> = 40
+
+local frameTable <const> = {
+    gfx.image.new("images/nick_head_small"),
+    gfx.image.new("images/nick_head_med"),
+    gfx.image.new("images/nick_head_big"),
+    gfx.image.new("images/nick_head_huge"),
+}
+
+local bodyImage = gfx.image.new("images/nick_body_ground")
+assert(bodyImage)
 
 for _, c in ipairs(frameTable) do
     assert(c)
 end
 
+class("NickBody").extends(gfx.sprite)
+
+function NickBody:init()
+    self:setImage(bodyImage)
+    self:add()
+    self:setZIndex(4)
+    self:setCenter(.48, -.19)
+end
+
+class("Nick").extends(gfx.sprite)
+
 function Nick:init()
     self:setImage(frameTable[1])
+    self:setZIndex(5)
     self:add()
-    self:moveTo(150, 200)
+    self:moveTo(200, 100)
     self.inflation = 0.0
     self.inflationFrame = 1
+    self.body = NickBody()
 end
 
 function Nick:update()
@@ -57,5 +71,11 @@ function Nick:update()
 
     self.inflation = newInflation
 
+    -- fix our body
+    self.body:moveTo(self:getPosition())
+
     -- move based on how inflated our head is
+    local x, y = self:getPosition()
+    y -= self.inflation/3
+    self:moveTo(x, y)
 end

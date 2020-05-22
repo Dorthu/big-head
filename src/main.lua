@@ -10,6 +10,7 @@ local camera = Camera(nick)
 
 function playdate:update()
     gfx.clear()
-    gfx.sprite.update()
     camera:update()
+    dx, dy = gfx.getDrawOffset()
+    gfx.sprite.update()
 end

@@ -19,9 +19,15 @@ local frameTable <const> = {
 local bodyImageGround = gfx.image.new("images/nick_body_smol")
 local bodyImageTakeoff = gfx.image.new("images/nick_body_takeoff")
 local bodyImageFly = gfx.image.new("images/nick_body_fly")
+local bodyImageCharge = gfx.image.new("images/nick_body_charge")
+local bodyImageLunge = gfx.image.new("images/nick_body_lunge")
+local bodyImageLunge2 = gfx.image.new("images/nick_body_lunge_end")
 assert(bodyImageGround)
 assert(bodyImageTakeoff)
 assert(bodyImageFly)
+assert(bodyImageCharge)
+assert(bodyImageLunge)
+assert(bodyImageLunge2)
 
 for _, c in ipairs(frameTable) do
     assert(c)
@@ -48,6 +54,7 @@ function Nick:init()
     self.body = NickBody()
     self.flightStage = 0
     self.chargingDash = 0
+    self.dashSpeed = 0
 end
 
 function Nick:update()
@@ -94,23 +101,47 @@ function Nick:update()
     if self.flightStage == 0 then stageGravity = 0 end
     y -= self.inflation/3 - stageGravity
 
-    print(self.chargingDash)
+    -- dash things
+    if self.dashSpeed ~= 0 then
+        local thisChange = 6
+        local flip = gfx.kImageUnflipped
+
+        if self.dashSpeed > 0 then
+            thisChange = -6
+            flip = gfx.kImageFlippedX
+        else
+            thisChange = 6
+        end
+
+        if math.abs(self.dashSpeed) > 6 then
+            self.body:setImage(bodyImageLunge, flip)
+        else
+            self.body:setImage(bodyImageLunge2, flip)
+        end
+
+        self.dashSpeed += thisChange
+    end
+
     -- other movement
     if self.chargingDash == 0 then
         if playdate.buttonJustPressed(playdate.kButtonLeft) then
             self.chargingDash = -1
+            self.body:setImage(bodyImageCharge)
         elseif playdate.buttonJustPressed(playdate.kButtonRight) then
             self.chargingDash = 1
+            self.body:setImage(bodyImageCharge, gfx.kImageFlippedX) -- flipped
         end
     else
         if self.chargingDash == -1 and playdate.buttonJustReleased(playdate.kButtonLeft) then
-            x -= 5
+            self.dashSpeed = -18 -- multiple of 6
             self.chargingDash = 0
         elseif self.chargingDash == 1 and playdate.buttonJustReleased(playdate.kButtonRight) then
-            x += 5
+            self.dashSpeed = 18 -- multiple of 6
             self.chargingDash = 0
         end
     end
+
+    x += self.dashSpeed
 
     self:moveTo(x, y)
 

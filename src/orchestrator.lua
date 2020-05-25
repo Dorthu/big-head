@@ -58,9 +58,15 @@ end
 -- spawns the entire level.  This uses some randomness to always give you a new
 -- adventure.
 function spawnEnv()
+    -- start with some randomness
+    math.randomseed(playdate.getSecondsSinceEpoch())
+
     makeGround()
+    local space = 100
 
     for c=1,5 do
-        spawnStreetlight(-100 + c * -120, c % 2 == 0)    
+        local thisSpace = (c * 120) + math.random(0, 70)
+        spawnStreetlight(-1 * (space + thisSpace), c % 2 == 0)
+        space = thisSpace
     end
 end

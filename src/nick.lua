@@ -3,6 +3,7 @@ import "CoreLibs/sprites"
 import "CoreLibs/graphics"
 
 local gfx <const> = playdate.graphics
+local geo <const> = playdate.geometry
 
 local lowThreshold <const> = 5
 local midThreshold <const> = 15
@@ -15,6 +16,13 @@ local frameTable <const> = {
     gfx.image.new("images/nick_head_med"),
     gfx.image.new("images/nick_head_big"),
     gfx.image.new("images/nick_head_huge"),
+}
+
+local collisionTable <const> = {
+    geo.rect.new(3, 19, 21, 19),
+    geo.rect.new(3, 15, 21, 23),
+    geo.rect.new(3,9,21,29),
+    geo.rect.new(3,3,21,35),
 }
 
 local bodyImageGround = gfx.image.new("images/nick_body_smol")
@@ -92,6 +100,7 @@ function Nick:update()
     if newFrame ~= -1 then
         self.inflationFrame = newFrame
         self:setImage(frameTable[newFrame]) 
+        self:setCollideRect(collisionTable[newFrame])
     end
 
     self.inflation = newInflation

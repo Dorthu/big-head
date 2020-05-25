@@ -48,7 +48,7 @@ function Nick:init()
     self:setImage(frameTable[1])
     self:setZIndex(5)
     self:add()
-    self:moveTo(200, 100)
+    self:moveTo(200, -60)
     self.inflation = 0.0
     self.inflationFrame = 1
     self.body = NickBody()

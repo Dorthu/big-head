@@ -1,3 +1,4 @@
+-- camera.lua is the Camera class, which follows Nick up to space.
 local gfx <const> = playdate.graphics
 
 class("Camera").extends()

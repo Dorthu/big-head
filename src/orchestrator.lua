@@ -14,6 +14,7 @@ assert(sprGrass2)
 
 local sprites = {}
 
+-- does what it says on the tin.
 function makeGround()
     local s = gfx.sprite.new()
     s.counter = 0
@@ -35,6 +36,7 @@ function makeGround()
     return s
 end
 
+-- creates a streetlight that you gotta not bump into.
 function spawnStreetlight(height, leftSide)
     local streetlight = gfx.sprite.new()
     local x = 94
@@ -46,11 +48,15 @@ function spawnStreetlight(height, leftSide)
 
     streetlight:setImage(sprStreetlight, flip)
     streetlight:moveTo(x, height)
+    streetlight:setCollideRect(0,0, 185, 17)
+    streetlight:setGroups({2}) -- group 2 is things that kill nick
     streetlight:add()
 
     return streetlight
 end
 
+-- spawns the entire level.  This uses some randomness to always give you a new
+-- adventure.
 function spawnEnv()
     makeGround()
 

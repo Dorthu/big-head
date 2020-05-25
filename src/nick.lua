@@ -1,3 +1,4 @@
+-- nick.lua is Nick, my brother.  His head inflates to allow him to fly around.
 import "CoreLibs/sprites"
 import "CoreLibs/graphics"
 
@@ -45,10 +46,18 @@ end
 class("Nick").extends(gfx.sprite)
 
 function Nick:init()
+    -- init sprite stuff
     self:setImage(frameTable[1])
     self:setZIndex(5)
     self:add()
     self:moveTo(200, -60)
+    self:setGroups({1}) -- Nick is the only thing in group one
+    self:setCollidesWithGroups({2}) -- and this is all we care about bumping into
+    self:setCollideRect(3,3,21,35)
+    -- collisionResponse is handled in main.lua so we can piggyback off the same
+    -- game over logic.
+
+    -- init other stuff
     self.inflation = 0.0
     self.inflationFrame = 1
     self.body = NickBody()
@@ -158,7 +167,7 @@ function Nick:update()
         x = 395
     end
 
-    self:moveTo(x, y)
+    self:moveWithCollisions(x, y)
 
     -- fix our body
     self.body:moveTo(self:getPosition())

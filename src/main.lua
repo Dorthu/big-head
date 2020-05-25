@@ -1,3 +1,11 @@
+-- Uncle Nick's Big Head
+--  by Dorthu
+--
+--  This is a stupid, weird game whose purpose is to introduce me to playdate.
+--  This game is about my brother, and inflating his head so he floats off to
+--  space like a balloon, while avoiding obstacles.
+--
+--  No offense, Nick.
 import "CoreLibs/sprites"
 import "CoreLibs/graphics"
 import "nick"
@@ -17,6 +25,11 @@ function restartGame()
     nick = Nick()
     camera = Camera(nick)
     spawnEnv()
+
+    function nick:collisionResponse(other)
+        print(other)
+        lose()
+    end
 end
 
 local gameState = 1 -- 0 = ended, 1 = running
@@ -46,6 +59,7 @@ function lose()
     gameState = 0
     s = gfx.sprite.new()
     s:setImage(sprLose)
+    s:setZIndex(100)
     s:moveTo(200, 120)
     s:setIgnoresDrawOffset(true)
     s:add()

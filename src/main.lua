@@ -51,4 +51,6 @@ function lose()
     s:add()
     -- stop nick
     nick.update = function() end
+    -- stop accelerometer
+    playdate.stopAccelerometer()
 end

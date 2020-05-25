@@ -53,8 +53,8 @@ end
 
 function spawnEnv()
     makeGround()
-    sprites[1] = spawnStreetlight(-220, true)
-    sprites[2] = spawnStreetlight(-370, false)
-    sprites[3] = spawnStreetlight(-470, true)
-    sprites[4] = spawnStreetlight(-600, false)
+
+    for c=1,5 do
+        spawnStreetlight(-100 + c * -120, c % 2 == 0)    
+    end
 end

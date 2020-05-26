@@ -17,6 +17,10 @@ local gfx <const> = playdate.graphics
 local sprLose <const> = gfx.image.new("images/tmp-lose")
 assert(sprLose)
 
+-- TODO - temp
+local sprElevationBar <const> = gfx.image.new("images/elevation-bar")
+assert(sprElevationBar)
+
 local nick = nil
 local camera = nil
 
@@ -25,6 +29,14 @@ function restartGame()
     nick = Nick()
     camera = Camera(nick)
     spawnEnv()
+
+    -- TODO
+    local sidebar = gfx.sprite.new()
+    sidebar:setImage(sprElevationBar)
+    sidebar:setIgnoresDrawOffset(true)
+    sidebar:moveTo(390, 120)
+    sidebar:setZIndex(400)
+    sidebar:add()
 
     function nick:collisionResponse(other)
         print(other)

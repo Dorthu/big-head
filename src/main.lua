@@ -17,26 +17,43 @@ local gfx <const> = playdate.graphics
 local sprLose <const> = gfx.image.new("images/tmp-lose")
 assert(sprLose)
 
--- TODO - temp
 local sprElevationBar <const> = gfx.image.new("images/elevation-bar")
+local sprElevationBarPlayer <const> = gfx.image.new("images/elevation-bar-player")
 assert(sprElevationBar)
+assert(sprElevationBarPlayer)
 
 local nick = nil
 local camera = nil
+local playerIndicator = nil
 
 function restartGame()
     gfx.sprite.removeAll() -- clean slate plx
     nick = Nick()
     camera = Camera(nick)
+    camLast = camera.offset
     spawnEnv()
 
-    -- TODO
+    -- do the sidebar thing
     local sidebar = gfx.sprite.new()
     sidebar:setImage(sprElevationBar)
     sidebar:setIgnoresDrawOffset(true)
     sidebar:moveTo(390, 120)
     sidebar:setZIndex(400)
     sidebar:add()
+    playerIndicator = gfx.sprite.new()
+    playerIndicator:setImage(sprElevationBarPlayer)
+    playerIndicator:setIgnoresDrawOffset(true)
+    playerIndicator:setZIndex(401)
+    playerIndicator:moveTo(385, 230)
+    playerIndicator:add()
+
+    function playerIndicator:update()
+        local _, playerY = nick:getPosition()
+        local percentComplete = playerY / 50
+        local x, y = self:getPosition()
+        y = 230 + percentComplete
+        self:moveTo(x, y)
+    end
 
     function nick:collisionResponse(other)
         print(other)

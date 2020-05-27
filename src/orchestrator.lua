@@ -69,6 +69,7 @@ function spawnBird(height, x)
     bird:add()
     bird.direction = 1
     bird.counter = 1
+    bird.speed = math.random(3, 7)
 
     function bird:update()
         local x, y = self:getPosition()
@@ -80,7 +81,7 @@ function spawnBird(height, x)
             self.direction = 1
             needsUpdate = true
         end
-        self:moveTo(x+(5*self.direction), y)
+        self:moveTo(x+(self.speed*self.direction), y)
         self.counter += 1
         if needsUpdate or self.counter == 11 or self.counter == 21 then
             local flip = gfx.kImageUnflipped

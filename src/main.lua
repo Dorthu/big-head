@@ -31,7 +31,7 @@ function restartGame()
     nick = Nick()
     camera = Camera(nick)
     camLast = camera.offset
-    spawnEnv()
+    spawnEnv(nick)
 
     -- do the sidebar thing
     local sidebar = gfx.sprite.new()

@@ -17,6 +17,9 @@ local sprBird2 <const> = gfx.image.new("images/bird2")
 assert(sprBird1)
 assert(sprBird2)
 
+local sprPlane <const> = gfx.image.new("images/plane")
+assert(sprPlane)
+
 local sprites = {}
 
 -- does what it says on the tin.
@@ -96,9 +99,37 @@ function spawnBird(height, x)
     end
 end
 
+-- I need nick to know when he's heigh enough for me to move
+function spawnPlane(nick, height, left)
+    local plane = gfx.sprite.new()
+    local flip = gfx.kImageUnflipped
+    local initX = 75
+    local dir = 1
+    if not left then
+        flip = gfx.kImageFlippedX
+        initX = 325
+        dir = -1
+    end
+    plane:setImage(sprPlane, flip)
+    plane:moveTo(initX, height)
+    plane:setCollideRect(0,0,150, 43)
+    plane:setGroups({2})
+    plane.dir = dir
+    plane.speed = math.random(2, 8)
+    plane:add()
+
+    function plane:update()
+        self:moveBy(self.dir * self.speed, 0)
+
+        local x, y = self:getPosition()
+        if x > 475 then self:moveTo(-75, y)
+        elseif x < -75 then self:moveTo(475, y) end
+    end
+end
+
 -- spawns the entire level.  This uses some randomness to always give you a new
--- adventure.
-function spawnEnv()
+-- adventure.  This takes nick so that planes and the Ufo can inherit him.
+function spawnEnv(nick)
     -- start with some randomness
     math.randomseed(playdate.getSecondsSinceEpoch())
 
@@ -106,16 +137,38 @@ function spawnEnv()
     local space = 100
 
     -- spawn the streetlight region
-    for c=1,5 do
+    for c=1,4 do
         local thisSpace = (c * 60) + math.random(0, 40)
         spawnStreetlight(-1 * (space + thisSpace), c % 2 == 0)
         space += thisSpace
     end
 
     -- spawn the bird region
-    for c=1,5 do
+    for c=1,3 do
         local thisSpace = (c * 70) + math.random(-30, 50)
         spawnBird(-1 * (space + thisSpace), math.random(0, 300))
         space += thisSpace
+    end
+
+    -- streetlight and bird region - it's weird
+    for c=1,math.random(3, 5) do
+        local thisSpace = c*80 + math.random(0, 40)
+        spawnStreetlight(-1 * (space + thisSpace), math.random(1, 2) == 1)
+        spawnBird(-1 * (space + thisSpace + math.random(20, 40)), math.random(0, 300))
+        space += thisSpace
+    end
+
+    -- some space for planes
+    space += 40
+
+    -- now a plane
+    for c=1,10 do
+        local thisSpace = math.random(8, 12) * 10
+        spawnPlane(nick,-1 * (space+thisSpace), math.random(1, 2) == 1)
+        space += thisSpace
+
+        if c == 3 or c == 6 then
+            space += math.random(20, 50)
+        end
     end
 end

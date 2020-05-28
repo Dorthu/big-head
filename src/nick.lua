@@ -45,6 +45,7 @@ end
 class("NickBody").extends(gfx.sprite)
 
 function NickBody:init()
+    NickBody.super.init(self)
     self:setImage(bodyImageGround)
     self:add()
     self:setZIndex(4)
@@ -54,6 +55,7 @@ end
 class("Nick").extends(gfx.sprite)
 
 function Nick:init()
+    Nick.super.init(self)
     -- init sprite stuff
     self:setImage(frameTable[1])
     self:setZIndex(5)

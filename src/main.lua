@@ -49,7 +49,7 @@ function restartGame()
 
     function playerIndicator:update()
         local _, playerY = nick:getPosition()
-        local percentComplete = playerY / 50
+        local percentComplete = playerY / 30
         local x, y = self:getPosition()
         y = 230 + percentComplete
         self:moveTo(x, y)

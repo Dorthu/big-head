@@ -1,5 +1,6 @@
 import "CoreLibs/sprites"
 import "CoreLibs/graphics"
+import "ufo"
 
 local gfx <const> = playdate.graphics
 
@@ -100,7 +101,7 @@ function spawnBird(height, x)
 end
 
 -- I need nick to know when he's heigh enough for me to move
-function spawnPlane(nick, height, left)
+function spawnPlane(height, left)
     local plane = gfx.sprite.new()
     local flip = gfx.kImageUnflipped
     local initX = 75
@@ -128,7 +129,7 @@ function spawnPlane(nick, height, left)
 end
 
 -- spawns the entire level.  This uses some randomness to always give you a new
--- adventure.  This takes nick so that planes and the Ufo can inherit him.
+-- adventure.  This takes nick so that the Ufo can inherit him.
 function spawnEnv(nick)
     -- start with some randomness
     math.randomseed(playdate.getSecondsSinceEpoch())
@@ -137,38 +138,44 @@ function spawnEnv(nick)
     local space = 100
 
     -- spawn the streetlight region
-    for c=1,4 do
-        local thisSpace = (c * 60) + math.random(0, 40)
-        spawnStreetlight(-1 * (space + thisSpace), c % 2 == 0)
-        space += thisSpace
-    end
+    --for c=1,4 do
+    --    local thisSpace = (c * 60) + math.random(0, 40)
+    --    spawnStreetlight(-1 * (space + thisSpace), c % 2 == 0)
+    --    space += thisSpace
+    --end
 
-    -- spawn the bird region
-    for c=1,3 do
-        local thisSpace = (c * 70) + math.random(-30, 50)
-        spawnBird(-1 * (space + thisSpace), math.random(0, 300))
-        space += thisSpace
-    end
+    ---- spawn the bird region
+    --for c=1,3 do
+    --    local thisSpace = (c * 70) + math.random(-30, 50)
+    --    spawnBird(-1 * (space + thisSpace), math.random(0, 300))
+    --    space += thisSpace
+    --end
 
-    -- streetlight and bird region - it's weird
-    for c=1,math.random(3, 5) do
-        local thisSpace = c*80 + math.random(0, 40)
-        spawnStreetlight(-1 * (space + thisSpace), math.random(1, 2) == 1)
-        spawnBird(-1 * (space + thisSpace + math.random(20, 40)), math.random(0, 300))
-        space += thisSpace
-    end
+    ---- streetlight and bird region - it's weird
+    --for c=1,math.random(3, 5) do
+    --    local thisSpace = c*80 + math.random(0, 40)
+    --    spawnStreetlight(-1 * (space + thisSpace), math.random(1, 2) == 1)
+    --    spawnBird(-1 * (space + thisSpace + math.random(20, 40)), math.random(0, 300))
+    --    space += thisSpace
+    --end
 
-    -- some space for planes
-    space += 40
+    ---- some space for planes
+    --space += 40
 
-    -- now a plane
-    for c=1,10 do
-        local thisSpace = math.random(8, 12) * 10
-        spawnPlane(nick,-1 * (space+thisSpace), math.random(1, 2) == 1)
-        space += thisSpace
+    ---- now a plane
+    --for c=1,10 do
+    --    local thisSpace = math.random(8, 12) * 10
+    --    spawnPlane(-1 * (space+thisSpace), math.random(1, 2) == 1)
+    --    space += thisSpace
 
-        if c == 3 or c == 6 then
-            space += math.random(20, 50)
-        end
-    end
+    --    if c == 3 or c == 6 then
+    --        space += math.random(20, 50)
+    --    end
+    --end
+
+    -- finally, the boss
+    space += math.random(20, 50)
+
+    space += 100
+    local ufo = Ufo(nick, -1 * space)
 end

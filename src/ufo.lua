@@ -83,6 +83,7 @@ function Ufo:init(nick, height)
     self.shootPattern = math.random(1, 3)
     self.shooting = false
     self.shootTimer = 0
+    self.dir = -1
 end
 
 function Ufo:update()
@@ -110,12 +111,21 @@ function Ufo:update()
 
     -- moving
     local _, nickY = self.nick:getPosition()
-    local _, myY = self:getPosition()
+    local myX, myY = self:getPosition()
+    local moveAmt = geo.vector2D.new(0, 0)
 
     -- stay above nick
-    if nickY - myY < -5 then
-        local moveAmt = nickY - myY
-        if moveAmt < -10 then moveAmt = -10 end
-        self:moveBy(0, moveAmt)
+    if nickY - myY < 100 then
+        moveAmt.dy = myY - nickY
+        if moveAmt.dy < -15 then moveAmt.dy = -15 end
     end
+
+    -- float back and forth, unless we stopped to shoot
+    if not self.shooting then
+        if myX < 10 and self.dir < 0 then self.dir = 1 end
+        if myX > 360 and self.dir > 0 then self.dir = -1 end
+        moveAmt.dx = 10 * self.dir
+    end
+
+    self:moveBy(moveAmt:unpack())
 end

@@ -42,6 +42,8 @@ for _, c in ipairs(frameTable) do
     assert(c)
 end
 
+local TAKEOFF_THRESHOLD <const> = 5
+
 class("NickBody").extends(gfx.sprite)
 
 function NickBody:init()
@@ -81,6 +83,12 @@ function Nick:update()
     -- crank fast enough that our head inflates
     local crank, accel = playdate.getCrankChange()
     if crank < 0 then crank = 0 end
+
+    -- it's easy to register some crank movement without actually cranking, so there's a bit of
+    -- leeway when you just started
+    if self.flightStage == 0 and crank < TAKEOFF_THRESHOLD then
+        crank = 0
+    end
 
     -- but it deflates too
     local deflationRate = self.inflation/2
@@ -168,7 +176,7 @@ function Nick:update()
     end
 
     local drift = playdate.readAccelerometer()
-    if drift == nil then drift = 0 else drift *= 2 end
+    if drift == nil then drift = 0 else drift *= 20 end
 
     x += self.dashSpeed + drift
 

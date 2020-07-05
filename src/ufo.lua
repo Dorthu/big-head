@@ -84,10 +84,21 @@ function Ufo:init(nick, height)
     self.shooting = false
     self.shootTimer = 0
     self.dir = -1
+    self.active = 0
 end
 
 function Ufo:update()
     self.ticker += 1
+
+    -- if nick's not close to us yet, don't bother shooting
+    if self.actvie == 0 then
+        local _, nickY = self.nick:getPosition()
+        if nickY < self.height - 50 then
+            return
+        else
+            self.active = 1
+        end
+    end
 
     -- shooting
     if not self.shooting and self.ticker % 10 == 0 and math.random(1, 10) == 1 then

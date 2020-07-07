@@ -12,8 +12,9 @@ build:
 simulate: build
 	$(PLAYDATE_SIMULATOR) $(PDX_NAME).pdx
 
-#@PHONEY: install
-#install: build
-#	$(PDUTIL) /dev/ttyACM0 datadisk
-#	cp -r $(PDX_NAME).pdx /media/dorthu/PLAYDATE/Games/$(PDX_NAME).pdx
-#	# TODO - unmount the device (umount /media/dorthu/PLAYDATE isn't enough)
+@PHONEY: install
+install: build
+	./pdman mount
+	while [ ! -e /media/dorthu/PLAYDATE ]; do sleep 1; done
+	cp -r $(PDX_NAME).pdx /media/dorthu/PLAYDATE/Games/$(PDX_NAME).pdx
+	./pdman umount

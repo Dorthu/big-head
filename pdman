@@ -1,0 +1,10 @@
+case $1 in
+    mount)
+        sudo ~/playdate/PlaydateSDK-0.10.2/bin/pdutil /dev/ttyACM0 datadisk
+        ;;
+    umount)
+        sudo eject /media/dorthu/PLAYDATE
+        ;;
+    *)
+        echo "Unknown command $1"
+esac

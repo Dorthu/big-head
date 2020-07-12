@@ -71,10 +71,11 @@ local shootDownFuncs = {
 --
 class("Ufo").extends(gfx.sprite)
 
-function Ufo:init(nick, height)
+function Ufo:init(nick, camera, height)
     Ufo.super.init(self)
 
     self.nick = nick
+    self.camera = camera
     self.height = height
     self:setImage(sprUfo)
     self:moveTo(200, height)
@@ -85,6 +86,7 @@ function Ufo:init(nick, height)
     self.shootTimer = 0
     self.dir = -1
     self.active = 0
+    self.followDistance = 0
 end
 
 function Ufo:update()
@@ -121,14 +123,17 @@ function Ufo:update()
     end
 
     -- moving
-    local _, nickY = self.nick:getPosition()
     local myX, myY = self:getPosition()
+    local camOffset = self.camera.offset
     local moveAmt = geo.vector2D.new(0, 0)
 
-    -- stay above nick
-    if nickY - myY < 100 then
-        moveAmt.dy = myY - nickY
-        if moveAmt.dy < -15 then moveAmt.dy = -15 end
+    -- stay near the top of the screen for as long as we're supposed to
+    if self.followDistance < 300 then
+        local deltaY = camOffset - myY + 30
+        if deltaY < 0 then
+            self.followDistance += -1 * deltaY
+            moveAmt.dy = deltaY
+        end
     end
 
     -- float back and forth, unless we stopped to shoot

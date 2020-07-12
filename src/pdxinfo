@@ -4,3 +4,4 @@ description=Escape to space with a big head!
 bundleID=com.dorthu.uncle-nick-big-head
 version=0.1
 buildNumber=1
+imagePath=images/nick-title

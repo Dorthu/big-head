@@ -25,6 +25,17 @@ assert(sprElevationBarPlayer)
 local nick = nil
 local camera = nil
 local playerIndicator = nil
+-- TODO - make these look like a smooth transition to black
+local fadePatterns = {
+    {0xf0, 0x0f, 0x0f, 0x0f, 0xf0, 0x0f, 0x0f, 0x0f},
+    {0xf0, 0x0f, 0xf0, 0x0f, 0xf0, 0x0f, 0xf0, 0x0f},
+    {0xf0, 0xf0, 0x0f, 0x0f, 0xf0, 0xf0, 0x0f, 0x0f},
+    {0xf0, 0xf0, 0x0f, 0xf0, 0xf0, 0x0f, 0xf0, 0xf0},
+    {0xf0, 0xf0, 0xf0, 0x0f, 0xf0, 0xf0, 0xf0, 0x0f},
+}
+local curPattern = 0
+local bgImg = nil
+local bgSpr = nil
 
 function restartGame()
     gfx.sprite.removeAll() -- clean slate plx
@@ -47,22 +58,62 @@ function restartGame()
     playerIndicator:moveTo(385, 230)
     playerIndicator:add()
 
+    -- reset background
+    curPattern = 0
+    bgImg = gfx.image.new(400, 240)
+    bgSpr = gfx.sprite.new()
+    bgSpr:setImage(bgImg)
+    bgSpr:moveTo(200,120)
+    bgSpr:setIgnoresDrawOffset(true)
+
     function playerIndicator:update()
         local _, playerY = nick:getPosition()
-        local percentComplete = playerY / 30
+        local percentComplete = playerY / 10
         local x, y = self:getPosition()
         y = 230 + percentComplete
         self:moveTo(x, y)
+
+        -- do we update the background?
+        local updatePattern = false
+
+        print(percentComplete)
+        if curPattern == 0 and percentComplete < -75 then
+            print("it is on screen now")
+            bgSpr:add()
+            curPattern += 1
+            updatePattern = true
+        elseif (curPattern == 1 and percentComplete < -90)
+                or (curPattern == 2 and percentComplete < -105)
+                or (curPattern == 3 and percentComplete < - 120)
+                or (curPattern == 4 and percentComplete < -135) then
+            curPattern += 1
+            updatePattern = true
+        elseif curPattern == 5 and percentComplete < -150 then
+            gfx.pushContext(bgImg)
+            gfx.setColor(gfx.kColorBlack)
+            gfx.fillRect(0,0,400,240)
+            gfx.popContext()
+            bgSpr:setNeedsRedraw()
+        end
+
+        if updatePattern then
+            gfx.pushContext(bgImg)
+            gfx.setPattern(fadePatterns[curPattern])
+            gfx.fillRect(0,0,400,240)
+            gfx.popContext()
+            bgSpr:setNeedsRedraw()
+        end
     end
 
     function nick:collisionResponse(other)
-        print(other)
-        lose()
-    end
+        --lose() TODO
+     end
 end
 
 local gameState = 1 -- 0 = ended, 1 = running
 restartGame()
+
+local tmpCtr = 0
 
 function playdate:update()
     if gameState == 1 then

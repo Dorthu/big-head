@@ -15,6 +15,7 @@ import "orchestrator"
 local gfx <const> = playdate.graphics
 
 local sprLose <const> = gfx.image.new("images/tmp-lose")
+local sprWin <const> = gfx.image.new("images/tmp-win")
 assert(sprLose)
 
 local sprElevationBar <const> = gfx.image.new("images/elevation-bar")
@@ -72,12 +73,14 @@ function restartGame()
         y = 230 + percentComplete
         self:moveTo(x, y)
 
+        if percentComplete < -230 then
+            win()
+        end
+
         -- do we update the background?
         local updatePattern = false
 
-        print(percentComplete)
         if curPattern == 0 and percentComplete < -75 then
-            print("it is on screen now")
             bgSpr:add()
             curPattern += 1
             updatePattern = true
@@ -105,7 +108,7 @@ function restartGame()
     end
 
     function nick:collisionResponse(other)
-        --lose() TODO
+        lose()
      end
 end
 
@@ -145,5 +148,18 @@ function lose()
     -- stop nick
     nick.update = function() end
     -- stop accelerometer
+    playdate.stopAccelerometer()
+end
+
+function win()
+    gameState = 0
+    s = gfx.sprite.new()
+    s:setImage(sprWin)
+    s:setZIndex(100)
+    s:moveTo(200,120)
+    s:setIgnoresDrawOffset(true)
+    s:add()
+    -- stop everything
+    nick.update = function() end
     playdate.stopAccelerometer()
 end

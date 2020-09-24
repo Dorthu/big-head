@@ -1,7 +1,7 @@
-PDC ?= ~/playdate/PlaydateSDK-0.10.2/bin/pdc
-PDUTIL ?= ~/playdate/PlaydateSDK-0.10.2/bin/pdutil
-PLAYDATE_SIMULATOR ?= ~/playdate/PlaydateSDK-0.10.2/bin/PlaydateSimulator
-PLAYDATE_SDK_PATH ?= ~/playdate/PlaydateSDK-0.10.2/
+PDC ?= ~/playdate/PlaydateSDK-Current/bin/pdc
+PDUTIL ?= ~/playdate/PlaydateSDK-Current/bin/pdutil
+PLAYDATE_SIMULATOR ?= ~/playdate/PlaydateSDK-Current/bin/PlaydateSimulator
+PLAYDATE_SDK_PATH ?= ~/playdate/PlaydateSDK-Current/
 PDX_NAME ?= 'Big Head'
 PDX_DIRNAME ?= 'Big Head.pdx'
 

@@ -1,5 +1,7 @@
 # Big Head
 
+![a screenshot](https://github.com/Dorthu/uncle-nicks-big-head/blob/master/uncleNick4.gif?raw=true)
+
 A tiny little test Playdate game from the invite-only beta days.
 
 ## Building

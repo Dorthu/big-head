@@ -65,6 +65,7 @@ function restartGame()
     bgSpr:setImage(bgImg)
     bgSpr:moveTo(200,120)
     bgSpr:setIgnoresDrawOffset(true)
+    bgSpr:setZIndex(-1000)
 
     function playerIndicator:update()
         local _, playerY = nick:getPosition()
@@ -95,7 +96,6 @@ function restartGame()
             gfx.setColor(gfx.kColorBlack)
             gfx.fillRect(0,0,400,240)
             gfx.popContext()
-            bgSpr:setNeedsRedraw()
         end
 
         if updatePattern then
@@ -103,7 +103,6 @@ function restartGame()
             gfx.setPattern(fadePatterns[curPattern])
             gfx.fillRect(0,0,400,240)
             gfx.popContext()
-            bgSpr:setNeedsRedraw()
         end
     end
 

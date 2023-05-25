@@ -1,6 +1,6 @@
 case $1 in
     mount)
-        sudo ~/playdate/PlaydateSDK-0.10.2/bin/pdutil /dev/ttyACM0 datadisk
+        sudo ~/playdate/PlaydateSDK-Current/bin/pdutil /dev/ttyACM0 datadisk
         ;;
     umount)
         sudo eject /media/dorthu/PLAYDATE
